@@ -1,5 +1,8 @@
 require_relative 'words'
 
+RESET = "\e[0m"
+RED = "\e[91m"
+
 class Hangman
   def initialize
     word_data = WordList.words.sample
@@ -30,30 +33,37 @@ class Hangman
 
   def make_guess
     while @lives > 0
-      puts "Choisis une lettre"
+      puts "\n\n\n\n"
+      puts "Choisis une #{RED}lettre#{RESET}"
       guess = gets.chomp
 
       case guess.downcase
       when "exit"
-        puts "Merci d'avoir joué !"
+        puts"\033[H\033[2J \n\n\n\n"
+        puts "#{RED}Merci#{RESET} d'avoir joué ! \n\n\n"
         return
       when "indice"
-        puts "Tu réclames l'aide du tout puissant.. Le voici : #{@hint} \n\n"
+        puts"\033[H\033[2J \n\n\n\n"
+        puts "Tu réclames l'aide du tout #{RED}puissant#{RESET}.. Le voici : #{@hint} \n\n\n"
         print_teaser
       else
         good_guess = @secret_word.include?(guess)
         if good_guess
-          puts "Bien joué!"
+          puts "\033[H\033[2J \n\n\n\n"
+          puts "#{RED}Bien#{RESET} Joué! \n\n\n"
           print_teaser(guess)
           if @secret_word == @word_teaser.split.join
-            puts "Félicitations, tu as gagné !"
+            puts"\033[H\033[2J \n\n\n\n"
+            puts "Félicitations, tu as gagné !\n"
+            puts "Le mot était #{@secret_word}\n\n\n\n"
             return
           end
         else
           @lives -= 1
-          puts "Raté ! Il te reste #{@lives} vies."
+          puts "\033[H\033[2J \n\n\n\n"
+          puts "#{RED}Raté#{RESET} ! Il te reste #{RED}#{@lives}#{RESET} vies. \n\n\n"
           if @lives == 0
-            puts "Game over !"
+            puts "Game #{RED}Over#{RESET} !\n\n\n\n"
           else
             print_teaser
           end
@@ -63,35 +73,46 @@ class Hangman
   end
 
   def begin
-    puts "\n\nBienvenue dans le jeu du pendu...\n\n\n"
-    puts "Tapez 'help' pour avoir les commandes du jeu"
-    puts "Tapez 'start' pour commencer le jeu"
+    puts "\033[H\033[2J"+ RED
+    puts "\n\n\n    ─────────────────────────────" +RESET
+    puts "  Bienvenue dans le jeu du pendu..." + RED
+    puts "    ─────────────────────────────\n\n\n"
+    puts RESET
+    puts "Tapez #{RED}help#{RESET} pour avoir les commandes du jeu"
+    puts ""
+    puts "Tapez #{RED}start#{RESET} pour commencer le jeu\n\n\n"
 
     command_entered = gets.chomp.downcase
     case command_entered
     when 'start'
-      puts "C'est parti !"
+      puts "\033[H\033[2J\n\n\n\n"
+      puts "C'est parti !\n\n\n"
       print_teaser
       make_guess
     when 'help'
-      puts "Pour quitter le jeu, tapez 'exit'"
-      puts "Pour avoir un indice, tapez 'indice'"
-      puts "Pour commencer le jeu, tapez 'start'"
+      puts "\033[H\033[2J\n\n\n\n"
+      puts "Pour quitter le jeu, tapez #{RED}Exit#{RESET}\n\n"
+      puts "Pour avoir un indice, tapez #{RED}Indice#{RESET}\n\n"
+      puts "Pour commencer le jeu, tapez #{RED}Start#{RESET}\n\n"
       command_entered = gets.chomp.downcase
       case command_entered
       when 'start'
-        puts "C'est parti !"
+        puts"\033[H\033[2J\n\n\n\n"
+        puts "C'est parti !\n\n\n"
         print_teaser
         make_guess
       when 'exit'
-        puts "Merci d'avoir joué !"
+        puts"\033[H\033[2J\n\n\n\n"
+        puts "Merci d'avoir joué !\n\n\n\n"
       when 'indice'
-        puts "Tu réclames l'aide du tout puissant.. Le voici : #{@hint} \n\n"
+        puts"\033[H\033[2J\n\n\n\n"
+        puts "Tu réclames l'aide du tout #{RED}puissant#{RESET}.. Le voici : #{@hint} \n\n\n"
         print_teaser
         make_guess
     else
-      print_teaser
-      make_guess
+      puts"\033[H\033[2J\n\n\n\n"
+      puts "#{RED}Commande Inconnue#{RESET}, veuillez recommencer\n\n\n\n"
+      command_entered = gets.chomp.downcase
     end
     end
   end
